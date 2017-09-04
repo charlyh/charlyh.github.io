@@ -1,6 +1,9 @@
-<!DOCTYPE html>
-<html>
-	<body>
-		<h1>Hello, World!</h1>
-	</body>
-</html>
+---
+layout: default
+---
+
+<p>Here is a collection of articles I wrote on various topics:</p>
+
+{% for post in site.posts %}
+   <li><span>{{ post.date | date_to_string }}</span> » <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a></li>
+{% endfor %}
