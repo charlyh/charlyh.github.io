@@ -1,2 +1,0 @@
-# charlyh.github.io
-blog

@@ -1,9 +1,31 @@
----
-layout: default
----
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charet="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="styesheet" src="bulma.min.css"/>
+</head>
+<body>
+	<section class="secion">
+		<div class="container">
+			<h1 class="title">Charly's homepage</h1>
+			<p class="subtitle">resources</p>
 
-<p>Here is a collection of articles I wrote on various topics:</p>
 
-{% for post in site.posts %}
-   <li><span>{{ post.date | date_to_string }}</span> » <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a></li>
-{% endfor %}
+
+			<h2>Telecom Paristech - master "Big Data" - cours "IoT: architecture et technologies"</h2>
+			<h3>2018</h3>
+			<p>Support de cours (Google slides):
+			<ul>
+				<li><a href="https://drive.google.com/open?id=1vg_3Jpg3vBoHz3Vg7tHIHfgEAUAc-GP9Hq3Gyo_EtUU">Cours IoT - 0 - introduction</a></li>
+				<li><a href="https://drive.google.com/open?id=13mxoxHz3gnwr087p87tDolG4YBVEFYQNtmr9VzZjdHE">Cours IoT - 1 - hardware</a></li>
+				<li><a href="https://drive.google.com/open?id=1ZY1OuSLyioj3p-ektFKxiXxD-zqCewiieq6-YhkwPR8">Cours IoT - 1.X - rappels</a></li>
+				<li><a href="https://drive.google.com/open?id=1j91Xy_T5IJ4IVbppBmkBReujw9J4b1zMU6jr1MaZlbs">Cours IoT - 2 - communications et protocoles</a></li>
+				<li><a href="https://drive.google.com/open?id=1O2OeVJwclHzxk4YOSPdW4z15yPvXQExKp0gQeix2ENQ">Cours IoT - 3 - plateformes</a></li>
+				<li><a href="https://drive.google.com/open?id=1X58rCgGZj1i6F5Zlwy_ATmXIejKIER4mXyRq5v_QdXU">Cours IoT - 4 - enjeux et perspectives</a></li>
+				<li><a href="https://drive.google.com/open?id=1EhGwvI8evsS9qNqMUdzlGMcy_DoLjLGC1Z1o2i4AvN8">Cours IoT - 5 - conclusion</a></li>
+			</ul>
+		</div>
+	</section>
+</body>
+<html>
