@@ -1,11 +1,11 @@
 const API_KEY = 'b6a3d30adb07411fb3d3bc0865b3257e';
-const client = new Paho.MQTT.Client("liveobjects.orange-business.com", 443, "web-ui");
 
 // set callback handlers
-client.onConnectionLost = onConnectionLost;
-client.onMessageArrived = onMessageArrived;
 
 /*try {
+const client = new Paho.MQTT.Client("liveobjects.orange-business.com", 443, "web-ui");
+client.onConnectionLost = onConnectionLost;
+client.onMessageArrived = onMessageArrived;
     console.log("connecting to live objects...");
     client.connect({ userName: 'payload', password: API_KEY, onSuccess: onSuccess });
 
