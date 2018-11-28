@@ -5,20 +5,24 @@ const client = new Paho.MQTT.Client("liveobjects.orange-business.com", 443, "web
 client.onConnectionLost = onConnectionLost;
 client.onMessageArrived = onMessageArrived;
 
-console.log("connecting to live objects...");
-client.connect({ userName: 'payload', password: API_KEY, onSuccess: onSuccess });
+try {
+    console.log("connecting to live objects...");
+    client.connect({ userName: 'payload', password: API_KEY, onSuccess: onSuccess });
 
-function onConnectionLost(responseObject) {
-    if (responseObject.errorCode !== 0) {
-        console.log("MQTT > disconnected:" + responseObject.errorMessage);
+    function onConnectionLost(responseObject) {
+        if (responseObject.errorCode !== 0) {
+            console.log("MQTT > disconnected:" + responseObject.errorMessage);
+        }
     }
-}
-function onMessageArrived(message) {
-    console.log(`MQTT > new message (${message.destinationName}`, message.payloadString);
-}
-function onSuccess() {
-    console.log("MQTT > connected!");
-    client.subscribe('router/~event.v1.data.new.#');
+    function onMessageArrived(message) {
+        console.log(`MQTT > new message (${message.destinationName}`, message.payloadString);
+    }
+    function onSuccess() {
+        console.log("MQTT > connected!");
+        client.subscribe('router/~event.v1.data.new.#');
+    }
+} catch (e) {
+    console.log(e);
 }
 
 // Vue
@@ -95,7 +99,7 @@ const loClient = {
             body: JSON.stringify({ request: { connector: 'mqtt', value: { req: mqttReq, arg: mqttArg } } })
         })
     },
-    getStationState: function(stationId) {
+    getStationState: function (stationId) {
         return fetch(`https://liveobjects.orange-business.com/api/v0/data/search`, {
             method: 'POST',
             headers: {
@@ -104,20 +108,20 @@ const loClient = {
             },
             body: JSON.stringify({
                 size: 0,
-                query: { match: { streamId: `seat:${stationId}` }},
+                query: { match: { streamId: `seat:${stationId}` } },
                 aggs: {
                     group_by_seat: {
-                      terms: {
-                          field: '@SEAT.value.seat'
-                      },
-                      aggs: {
-                          last_state: {
-                              top_hits: {
-                                  sort: [{ timestamp: { order: 'desc'}}],
-                                  size: 1
-                              }
-                          }
-                      }
+                        terms: {
+                            field: '@SEAT.value.seat'
+                        },
+                        aggs: {
+                            last_state: {
+                                top_hits: {
+                                    sort: [{ timestamp: { order: 'desc' } }],
+                                    size: 1
+                                }
+                            }
+                        }
                     }
                 }
             })
