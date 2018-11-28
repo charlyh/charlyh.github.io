@@ -1,0 +1,33 @@
+
+@font-face{
+    font-family:AvenirLTStd-Medium;
+    src: url(AvenirLTStd-Medium.woff) format("woff")
+}
+
+h1, h2, h3 {
+    font-family:AvenirLTStd-Medium;
+    margin-top: 1em;
+}
+.bg1 { 
+    background-color: #6e267b;
+}
+.box {
+    padding: 20px;
+    border-radius: 3px;
+}
+.box-primary {
+    color: #FFF;
+    background-color: #6e267b;
+}
+.box-secondary {
+    color: rgb(62, 62, 64);
+    background-color: #EEE;
+}
+
+
+.c0 { color: #FFF; }
+.c1 { color: #6e267b; }
+.c2 { color: rgb(62, 62, 64); }
+.c2 { color: rgb(138, 138, 143); }
+.ff1 { font-family: avenir_medium, Arial, Helvetica, sans-serif }
+.bigNumber { font-size: 2em }
