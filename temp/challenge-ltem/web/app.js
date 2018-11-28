@@ -5,7 +5,7 @@ const client = new Paho.MQTT.Client("liveobjects.orange-business.com", 443, "web
 client.onConnectionLost = onConnectionLost;
 client.onMessageArrived = onMessageArrived;
 
-try {
+/*try {
     console.log("connecting to live objects...");
     client.connect({ userName: 'payload', password: API_KEY, onSuccess: onSuccess });
 
@@ -23,7 +23,7 @@ try {
     }
 } catch (e) {
     console.log(e);
-}
+}*/
 
 // Vue
 const randomElementOf = (array) => {
