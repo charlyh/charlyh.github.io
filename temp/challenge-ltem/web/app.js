@@ -1,6 +1,6 @@
 const API_KEY = 'b6a3d30adb07411fb3d3bc0865b3257e';
 
-// set callback handlers
+let app;
 
 try {
     const client = new Paho.MQTT.Client("liveobjects.orange-business.com", 443, "web-ui");
@@ -17,6 +17,9 @@ try {
     function onMessageArrived(message) {
         console.log(`MQTT > new message (${message.destinationName}`, message.payloadString);
         const msg = JSON.parse(message.payloadString);
+        if (msg.model === 'SEAT') {
+            app.handleSeatUpdate(msg);
+        }
     }
     function onSuccess() {
         console.log("MQTT > connected!");
@@ -73,7 +76,7 @@ init = () => {
         seats: randomSeats(),
         now: moment()
     };
-    var app = new Vue({
+    app = new Vue({
         el: '#app',
         data: data,
         methods: {
@@ -81,14 +84,25 @@ init = () => {
                 this.selectedStation = station;
                 this.udpate();
             },
-            udpate: function() {
+            udpate: function () {
                 this.seats = randomSeats();
                 loClient.getStationState(this.selectedStation.id).then((res) => {
                     console.log("seatStatus", res);
                     this.seatStatus = res;
-                    this.seatsTotal = Object.values(res).length;
-                    this.seatsBusy = Object.values(res).filter((s) => s.value.status !== 1).length;
+                    this.updateCounts();
                 })
+            },
+            updateCounts: function () {
+                this.seatsTotal = Object.values(this.seatStatus).length;
+                this.seatsBusy = Object.values(this.seatStatus).filter((s) => s.value.status !== 1).length;
+            },
+            handleSeatUpdate: function (msg) {
+                if (msg.steamId === 'seat:' + this.selectedStation.id) {
+                    console.log("received update for currently selected station => udpating", msg);
+                    this.seatStatus[msg.value.seat] = msg;
+                } else {
+                    console.log("received update for another station => dropping", msg);
+                }
             },
             bookSeat: function (seat) {
                 console.log(`booking seat ${seat}`);
