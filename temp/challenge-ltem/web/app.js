@@ -36,7 +36,13 @@ init = () => {
         'partdieu': {
             city: 'Lyon', station: 'gare de la Part-Dieu', seats: [
                 { id: 1, deviceId: 'urn:lo:nsid:starterkit:352653090111519' },
-                { id: 2, deviceId: 'urn:lo:nsid:starterkit:352653090111519' }
+                { id: 2, deviceId: 'urn:lo:nsid:starterkit:352653090111519' },
+                { id: 3, deviceId: 'urn:lo:nsid:starterkit:352653090111519' },
+                { id: 4, deviceId: 'urn:lo:nsid:starterkit:352653090111519' },
+                { id: 5, deviceId: 'urn:lo:nsid:starterkit:352653090111519' },
+                { id: 6, deviceId: 'urn:lo:nsid:starterkit:352653090111519' },
+                { id: 7, deviceId: 'urn:lo:nsid:starterkit:352653090111519' },
+                { id: 8, deviceId: 'urn:lo:nsid:starterkit:352653090111519' },
             ]
         },
         'lyon-prc': { city: 'Lyon', station: 'gare de Perrache' },
@@ -61,7 +67,7 @@ init = () => {
     });
     const data = {
         stations: STATIONS,
-        selectedStation: randomElementOf(Object.values(STATIONS)),
+        selectedStation: STATIONS['partdieu'],
         seats: randomSeats(),
         services: randomServices(),
         now: moment()
