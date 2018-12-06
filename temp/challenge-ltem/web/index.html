@@ -57,14 +57,22 @@
 
             <p class="c2">{{ now.format('LLLL') }}</p>
 
-            <h2>Demo</h2>
-            <ul>
-                <li v-for="seat in selectedStation.seats">
-                    Siège #{{ seat.id  }} (device: {{seat.deviceId}}) - <button v-on:click="bookSeat(seat)">Réserver</button> / <button v-on:click="unbookSeat(seat)">Libérer</button>
-                </li>
-            </ul>
-
             <h2>Places</h2>
+
+            <div style="display: grid; grid-template-columns: auto auto auto auto; margin-bottom: 1em; text-align: center">
+                <!-- siège-->
+                <div v-for="seat in seatStatus">
+                    <h3>n°{{ seat.value.seat + 1 }}</h3>
+                    <img v-if="seat.value.status !== 1" src="assets/armchair-simple-dark.svg" width="120px" style="display: block; margin: 0 auto"/>                    
+                    <img v-if="seat.value.status === 1" src="assets/armchair-simple-dark-busy.svg" width="120px" style="display: block; margin: 0 auto"/>                    
+
+                    <div>
+                        <button v-on:click="bookSeat(seat)" class="btn">Réserver</button>
+                        <button v-on:click="unbookSeat(seat)" class="btn">Libérer</button>
+                    </div>
+                </div>
+
+            </div>
             <div class="box box-primary" style="font-size: 1.3em">
                 <div class="row align-items-center">
                     <div class="col text-center">
@@ -121,6 +129,7 @@
         <script src="assets/mqttws31.min.js"></script>
         <script src="assets/vue.min.js"></script>
         <script src="assets/moment.min.js"></script>
+        <script src="lo-client.js"></script>
         <script src="app.js"></script>
 </body>
 

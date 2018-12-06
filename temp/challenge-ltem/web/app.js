@@ -30,26 +30,29 @@ const randomElementOf = (array) => {
     return array[Math.floor(Math.random() * array.length)];
 }
 const randomBool = () => (Math.random() > 0.5);
+const STATIONS = [
+    {
+        id: 'partdieu', city: 'Lyon', station: 'gare de la Part-Dieu',
+        seats: [
+            { id: 1, deviceId: 'urn:lo:nsid:starterkit:352653090111519' },
+            { id: 2, deviceId: 'urn:lo:nsid:starterkit:352653090111519' },
+            { id: 3, deviceId: 'urn:lo:nsid:starterkit:352653090111519' },
+            { id: 4, deviceId: 'urn:lo:nsid:starterkit:352653090111519' },
+            { id: 5, deviceId: 'urn:lo:nsid:starterkit:352653090111519' },
+            { id: 6, deviceId: 'urn:lo:nsid:starterkit:352653090111519' },
+            { id: 7, deviceId: 'urn:lo:nsid:starterkit:352653090111519' },
+            { id: 8, deviceId: 'urn:lo:nsid:starterkit:352653090111519' },
+        ]
+    },
+    { id: 'lyon-prc', city: 'Lyon', station: 'gare de Perrache' },
+    { id: 'paris-lyon', city: 'Paris', station: 'gare de Lyon' },
+    { id: 'paris-nord', city: 'Paris', station: 'gare du Nord' },
+    { id: 'paris-mtp', city: 'Paris', station: 'gare Montparnasse' }
+];
+const STATION_MAP = STATIONS.reduce((map, el) => { map[el.id] = el; return map }, {});
 
 init = () => {
-    const STATIONS = {
-        'partdieu': {
-            city: 'Lyon', station: 'gare de la Part-Dieu', seats: [
-                { id: 1, deviceId: 'urn:lo:nsid:starterkit:352653090111519' },
-                { id: 2, deviceId: 'urn:lo:nsid:starterkit:352653090111519' },
-                { id: 3, deviceId: 'urn:lo:nsid:starterkit:352653090111519' },
-                { id: 4, deviceId: 'urn:lo:nsid:starterkit:352653090111519' },
-                { id: 5, deviceId: 'urn:lo:nsid:starterkit:352653090111519' },
-                { id: 6, deviceId: 'urn:lo:nsid:starterkit:352653090111519' },
-                { id: 7, deviceId: 'urn:lo:nsid:starterkit:352653090111519' },
-                { id: 8, deviceId: 'urn:lo:nsid:starterkit:352653090111519' },
-            ]
-        },
-        'lyon-prc': { city: 'Lyon', station: 'gare de Perrache' },
-        'paris-lyon': { city: 'Paris', station: 'gare de Lyon' },
-        'paris-nord': { city: 'Paris', station: 'gare du Nord' },
-        'paris-mtp': { city: 'Paris', station: 'gare Montparnasse' }
-    };
+
     const randomSeatsCategory = () => {
         const total = Math.floor(Math.random() * 20 + 1);
         return {
@@ -66,8 +69,8 @@ init = () => {
         coffee: randomBool()
     });
     const data = {
-        stations: STATIONS,
-        selectedStation: STATIONS['partdieu'],
+        seatStatus: {},
+        stations: STATION_MAP,
         seats: randomSeats(),
         services: randomServices(),
         now: moment()
@@ -77,9 +80,14 @@ init = () => {
         data: data,
         methods: {
             selectStation: function (station) {
+
                 this.selectedStation = station;
                 this.seats = randomSeats();
                 this.services = randomServices();
+                loClient.getStationState(station.id).then((res) => {
+                    console.log("seatStatus", res);
+                    this.seatStatus = res;
+                })
             },
             bookSeat: function (seat) {
                 console.log(`booking seat ${seat}`);
@@ -90,65 +98,11 @@ init = () => {
                 loClient.sendMqttCommand(seat.deviceId, 'res', { t: seat.id, v: 0 });
             }
 
+        },
+        created: function() {
+            this.selectStation(STATION_MAP['partdieu']);
         }
     });
 }
-
-const loClient = {
-    sendMqttCommand: function (deviceId, mqttReq, mqttArg) {
-        return fetch(`https://liveobjects.orange-business.com/api/v1/deviceMgt/devices/${deviceId}/commands`, {
-            method: 'POST',
-            headers: {
-                'X-API-Key': API_KEY,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ request: { connector: 'mqtt', value: { req: mqttReq, arg: mqttArg } } })
-        })
-    },
-    getStationState: function (stationId) {
-        return fetch(`https://liveobjects.orange-business.com/api/v0/data/search`, {
-            method: 'POST',
-            headers: {
-                'X-API-Key': API_KEY,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                size: 0,
-                query: { match: { streamId: `seat:${stationId}` } },
-                aggs: {
-                    group_by_seat: {
-                        terms: {
-                            field: '@SEAT.value.seat'
-                        },
-                        aggs: {
-                            last_state: {
-                                top_hits: {
-                                    sort: [{ timestamp: { order: 'desc' } }],
-                                    size: 1
-                                }
-                            }
-                        }
-                    }
-                }
-            })
-        });
-    },
-    listDevices: function (deviceId, mqttReq, mqttArg) {
-        return fetch(`https://liveobjects.orange-business.com/api/v1/deviceMgt/devices`, {
-            headers: {
-                'X-API-Key': API_KEY
-            }
-        });
-    }
-};
-
-loClient.getStationState("partdieu").then(res => res.json().then(res => {
-    const seatStates = {};
-    res.aggregations.group_by_seat.buckets.forEach((el) => {
-        const doc = el.last_state.hits.hits[0]._source;
-        seatStates[el.key] = { timestamp: doc.timestamp, status: doc.value.status };
-    });
-    console.log(seatStates);
-}));
 
 init();
