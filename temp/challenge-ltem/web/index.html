@@ -58,7 +58,6 @@
             <p class="c2">
                 {{ now.format('LLLL') }} |
                 <button class="btn" v-on:click="udpate()">actualiser</button>
-                <button class="btn" v-on:click="incr()">incr</button>
             </p>
 
             <h2>Places</h2>
@@ -99,11 +98,11 @@
 
 
             <h2>Statistiques</h2>
-            <h3>30 derniers jours</h3>
+            <h3>7 derniers jours - taux d'occupation</h3>
 
-            {{ rawStatsData }}
+            <div id="chart_days"></div>
 
-            <footer class="text-center">
+            <footer class="text-center" style="margin-top: 2em">
                 <a>mentions légales</a> | <a>conditions générales</a><br>
                 <small>made by <a href="http://rtone.fr">Rtone - IoT makers</a></small>
             </footer>
@@ -111,15 +110,14 @@
         </div>
 
 
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-            crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
-            crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
-            crossorigin="anonymous"></script>
+        <script src="assets/jquery-3.3.1.slim.min.js"></script>
+        <script src="assets/popper.min.js"></script>
+        <script src="assets/bootstrap.min.js"></script>
         <script src="assets/mqttws31.min.js"></script>
         <script src="assets/vue.min.js"></script>
         <script src="assets/moment.min.js"></script>
+        <script src="assets/moment.fr.js"></script>
+        <script src="assets/d3.min.js"></script>
         <script src="lo-client.js"></script>
         <script src="app.js"></script>
 </body>

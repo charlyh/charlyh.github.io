@@ -133,6 +133,71 @@ init = () => {
             this.selectStation(STATION_MAP['partdieu']);
         }
     });
+
+    const calendarFormat =  {sameDay: '[aujourd\'hui]', lastDay: '[hier]', lastWeek: 'dddd'};
+
+    // d3js chart
+    var chart = (() => {
+        // building list à past 7 days
+        const DATA = new Array(7).fill(0)
+            .map((d,i) => moment().startOf('day').subtract(i, 'day'))
+            .reverse()
+            .map((d) => ({ date: d.valueOf(), dateStr: d.calendar(null, calendarFormat), val: Math.floor(Math.random() * 100)}))
+        console.log("D", DATA);
+
+        const WIDTH = 1100;
+        const HEIGHT = 400;
+        const TEXT_HEIGHT = 20;
+        const LEFT_PADDING = 80;
+        var svg = d3.select("#chart_days").append("svg:svg").attr("width", WIDTH).attr("height", HEIGHT);
+        const xscale = d3.scaleLinear().domain([0, DATA.length]).range([LEFT_PADDING, WIDTH]);
+        const heightScale = d3.scaleLinear().domain([0, 100]).range([0, HEIGHT - TEXT_HEIGHT]);
+        const yScale = d3.scaleLinear().domain([0, 100]).range([HEIGHT - TEXT_HEIGHT, 0]);
+        
+        const gXLabels = svg.append("g");
+        const gYLabels = svg.append("g");
+        const gRects = svg.append("g");
+        
+        return {
+            update: function() {
+                // rects
+                var d = gRects.selectAll("rect").data(DATA);
+                d.enter().append("rect")
+                    .attr("fill", "#6e267b")
+                        .attr("width", xscale(0.5) - xscale(0))
+                        .attr("y", (d) => yScale(d.val))
+                        .attr("x", (d,i) => xscale(i))
+                        .attr("height", (d) => heightScale(d.val));
+                d.exit().remove();
+
+                // texts
+                d = gXLabels.selectAll("text").data(DATA);
+                d.enter().append("text")
+                    .text((d) => d.dateStr)
+                        .attr("x", (d,i) => xscale(i))
+                        .attr("y", HEIGHT);
+                d.exit().remove();
+
+                // Y axis
+                d = gYLabels.selectAll("text").data(yScale.ticks(5));
+                d.enter().append("text")
+                    .text((d) => '' + d)
+                        .attr("y", yScale);
+                d.exit().remove();
+                // Y axis
+                d = gYLabels.selectAll("line").data(yScale.ticks(5));
+                d.enter()
+                    .append("line")
+                    .attr("x1", LEFT_PADDING)
+                    .attr("x2", WIDTH)
+                    .attr("y1", yScale)
+                    .attr("y2", yScale)
+                    .attr("stroke", "#CCC");
+                d.exit().remove();
+            }
+        }
+    })();
+    chart.update();
 }
 
 init();
