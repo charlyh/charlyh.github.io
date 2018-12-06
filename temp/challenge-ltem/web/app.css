@@ -24,6 +24,11 @@ h1, h2, h3 {
     background-color: #EEE;
 }
 
+.gauge {
+    -webkit-transition: width 1s;
+    transition: width 1s;
+}
+
 
 .c0 { color: #FFF; }
 .c1 { color: #6e267b; }

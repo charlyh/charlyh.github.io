@@ -93,7 +93,6 @@ init = () => {
                 this.udpate();
             },
             udpate: function () {
-                this.seatStatus = {};
                 this.rawStatsData = [];
                 this.seats = randomSeats();
                 loClient.getStationState(this.selectedStation.id).then((res) => {
@@ -101,6 +100,9 @@ init = () => {
                     this.seatStatus = res;
                     this.updateCounts();
                 })
+            },
+            incr: function() {
+                this.seatsBusy = this.seatsBusy + 1;
             },
             updateCounts: function () {
                 this.seatsTotal = Object.values(this.seatStatus).length;
