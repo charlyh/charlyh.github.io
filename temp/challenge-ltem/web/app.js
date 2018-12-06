@@ -2,10 +2,10 @@ const API_KEY = 'b6a3d30adb07411fb3d3bc0865b3257e';
 
 // set callback handlers
 
-/*try {
-const client = new Paho.MQTT.Client("liveobjects.orange-business.com", 443, "web-ui");
-client.onConnectionLost = onConnectionLost;
-client.onMessageArrived = onMessageArrived;
+try {
+    const client = new Paho.MQTT.Client("liveobjects.orange-business.com", 443, "web-ui");
+    client.onConnectionLost = onConnectionLost;
+    client.onMessageArrived = onMessageArrived;
     console.log("connecting to live objects...");
     client.connect({ userName: 'payload', password: API_KEY, onSuccess: onSuccess });
 
@@ -16,6 +16,7 @@ client.onMessageArrived = onMessageArrived;
     }
     function onMessageArrived(message) {
         console.log(`MQTT > new message (${message.destinationName}`, message.payloadString);
+        const msg = JSON.parse(message.payloadString);
     }
     function onSuccess() {
         console.log("MQTT > connected!");
@@ -23,7 +24,7 @@ client.onMessageArrived = onMessageArrived;
     }
 } catch (e) {
     console.log(e);
-}*/
+}
 
 // Vue
 const randomElementOf = (array) => {
@@ -77,10 +78,12 @@ init = () => {
         data: data,
         methods: {
             selectStation: function (station) {
-
                 this.selectedStation = station;
+                this.udpate();
+            },
+            udpate: function() {
                 this.seats = randomSeats();
-                loClient.getStationState(station.id).then((res) => {
+                loClient.getStationState(this.selectedStation.id).then((res) => {
                     console.log("seatStatus", res);
                     this.seatStatus = res;
                     this.seatsTotal = Object.values(res).length;
@@ -97,7 +100,7 @@ init = () => {
             }
 
         },
-        created: function() {
+        created: function () {
             this.selectStation(STATION_MAP['partdieu']);
         }
     });

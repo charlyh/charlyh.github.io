@@ -55,28 +55,14 @@
             <!-- title -->
             <h1>Salon: {{ selectedStation.station }} ({{ selectedStation.city }})</h1>
 
-            <p class="c2">{{ now.format('LLLL') }}</p>
+            <p class="c2">{{ now.format('LLLL') }} | <button class="btn" v-on:click="udpate()">actualiser</button></p>
 
             <h2>Places</h2>
 
-            <div style="display: grid; grid-template-columns: auto auto auto auto; margin-bottom: 1em; text-align: center">
-                <!-- siège-->
-                <div v-for="seat in seatStatus">
-                    <h3>n°{{ seat.value.seat + 1 }}</h3>
-                    <img v-if="seat.value.status !== 1" src="assets/armchair-simple-dark.svg" width="120px" style="display: block; margin: 0 auto"/>                    
-                    <img v-if="seat.value.status === 1" src="assets/armchair-simple-dark-busy.svg" width="120px" style="display: block; margin: 0 auto"/>                    
-
-                    <div>
-                        <button v-on:click="bookSeat(seat)" class="btn">Réserver</button>
-                        <button v-on:click="unbookSeat(seat)" class="btn">Libérer</button>
-                    </div>
-                </div>
-
-            </div>
             <div class="box box-primary" style="font-size: 1.3em">
                 <div class="row align-items-center">
                     <div class="col text-center">
-                        <img src="assets/armchair-simple.svg" width="300px" />
+                        <img src="assets/armchair-simple.svg" height="200px" />
                     </div>
                     <div class="col">
                         <div>
@@ -87,6 +73,21 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <h3>Détails</h3>
+            <div style="display: grid; grid-template-columns: repeat(5, auto); margin-bottom: 1em; text-align: center">
+                <!-- siège-->
+                <div v-for="seat in seatStatus">
+                    <h3>n°{{ seat.value.seat + 1 }}</h3>
+                    <img v-if="seat.value.status !== 1" src="assets/armchair-simple-dark.svg" width="50%" style="display: block; margin: 0 auto"/>                    
+                    <img v-if="seat.value.status === 1" src="assets/armchair-simple-dark-busy.svg" width="120px" style="display: block; margin: 0 auto"/>                    
+
+                    <div>
+                        <button v-on:click="bookSeat(seat)" class="btn">Réserver</button>
+                        <button v-on:click="unbookSeat(seat)" class="btn">Libérer</button>
+                    </div>
+                </div>
+
             </div>
 <!-- 
             <h2>Autres services</h2>
