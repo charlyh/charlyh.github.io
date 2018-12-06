@@ -90,20 +90,22 @@ init = () => {
                     console.log("seatStatus", res);
                     this.seatStatus = res;
                     this.updateCounts();
-                    this.now = moment();
                 })
             },
             updateCounts: function () {
                 this.seatsTotal = Object.values(this.seatStatus).length;
                 this.seatsBusy = Object.values(this.seatStatus).filter((s) => s.value.status !== 1).length;
+                this.now = moment();
             },
             handleSeatUpdate: function (msg) {
-                if (msg.srteamId === 'seat:' + this.selectedStation.id) {
+                const expectedStreamId =  'seat:' + this.selectedStation.id;
+                if (msg.streamId === expectedStreamId) {
                     console.log("received update for currently selected station => udpating", msg);
                     this.seatStatus[msg.value.seat] = msg;
                 } else {
                     console.log("received update for another station => dropping", msg);
                 }
+                this.updateCounts();
             },
             bookSeat: function (seat) {
                 console.log(`booking seat ${seat}`);
