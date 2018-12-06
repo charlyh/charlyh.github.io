@@ -1,9 +1,18 @@
 const API_KEY = 'b6a3d30adb07411fb3d3bc0865b3257e';
 
+function guid() {
+    function s4() {
+      return Math.floor((1 + Math.random()) * 0x10000)
+        .toString(16)
+        .substring(1);
+    }
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+  }
+
 let app;
 
 try {
-    const client = new Paho.MQTT.Client("liveobjects.orange-business.com", 443, "mqtt");
+    const client = new Paho.MQTT.Client("liveobjects.orange-business.com", 443, "/mqtt", "web-ui-" + guid()  );
     client.onConnectionLost = onConnectionLost;
     client.onMessageArrived = onMessageArrived;
     console.log("connecting to live objects...");
@@ -15,7 +24,6 @@ try {
         }
     }
     function onMessageArrived(message) {
-        console.log(`MQTT > new message (${message.destinationName}`, message.payloadString);
         const msg = JSON.parse(message.payloadString);
         if (msg.model === 'SEAT') {
             app.handleSeatUpdate(msg);
@@ -85,6 +93,8 @@ init = () => {
                 this.udpate();
             },
             udpate: function () {
+                this.seatStatus = {};
+                this.rawStatsData = [];
                 this.seats = randomSeats();
                 loClient.getStationState(this.selectedStation.id).then((res) => {
                     console.log("seatStatus", res);
@@ -100,10 +110,10 @@ init = () => {
             handleSeatUpdate: function (msg) {
                 const expectedStreamId =  'seat:' + this.selectedStation.id;
                 if (msg.streamId === expectedStreamId) {
-                    console.log("received update for currently selected station => udpating", msg);
+                    console.log("received update for currently selected station => udpating", msg.value);
                     this.seatStatus[msg.value.seat] = msg;
                 } else {
-                    console.log("received update for another station => dropping", msg);
+                    console.log("received update for another station => dropping", msg.value);
                 }
                 this.updateCounts();
             },
