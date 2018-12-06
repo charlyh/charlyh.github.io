@@ -82,26 +82,13 @@
                         <div>
                             <div style="font-size: 2em">
                                 libres:<br>
-                                <span class="bigNumber">{{ seats.outlet.taken + seats.standard.taken }}</span> / <span class="bigNumber">{{ seats.outlet.total + seats.standard.total }}</span>
-                            </div>
-
-                            <p style="border-bottom: 1px solid #d876e9; margin: 0 0 10px; color: #d876e9">dont:</p>
-
-                            <div class="row  align-items-center">
-                                <div class="col">avec prise</div>
-                                <div class="col"><span class="bigNumber">{{ seats.outlet.taken }}</span> / <span class="bigNumber">{{ seats.outlet.total }}</span></div>
-                                <div class="col"><button class="btn btn-outline-light">Réserver</button></div>
-                            </div>
-                            <div class="row align-items-center">
-                                <div class="col">sans prise</div>
-                                <div class="col"><span class="bigNumber">{{ seats.standard.taken }}</span> / <span class="bigNumber">{{ seats.standard.total }}</span></div>
-                                <div class="col"><button class="btn btn-outline-light">Réserver</button></div>
+                                <span class="bigNumber">{{ seatsBusy }}</span> / <span class="bigNumber">{{ seatsTotal }}</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
+<!-- 
             <h2>Autres services</h2>
             <div class="box box-secondary">
                 <div class="row">
@@ -110,7 +97,7 @@
                     <div class="col text-right">WiFi</div>
                     <div class="col"><span class="fas fa-times" style="color: gray"></div>
                 </div>
-            </div>
+            </div> -->
 
             <footer class="text-center">
                 <a>mentions légales</a> | <a>conditions générales</a><br>

@@ -64,15 +64,12 @@ init = () => {
         standard: randomSeatsCategory(),
         outlet: randomSeatsCategory()
     });
-    const randomServices = () => ({
-        wifi: randomBool(),
-        coffee: randomBool()
-    });
     const data = {
         seatStatus: {},
         stations: STATION_MAP,
+        seatsTotal: 0,
+        seatsBusy: 0,
         seats: randomSeats(),
-        services: randomServices(),
         now: moment()
     };
     var app = new Vue({
@@ -83,10 +80,11 @@ init = () => {
 
                 this.selectedStation = station;
                 this.seats = randomSeats();
-                this.services = randomServices();
                 loClient.getStationState(station.id).then((res) => {
                     console.log("seatStatus", res);
                     this.seatStatus = res;
+                    this.seatsTotal = Object.values(res).length;
+                    this.seatsBusy = Object.values(res).filter((s) => s.value.status !== 1).length;
                 })
             },
             bookSeat: function (seat) {
