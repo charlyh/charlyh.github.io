@@ -15,7 +15,8 @@
 
     <link rel="stylesheet" href="app.css" />
 
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU"
+        crossorigin="anonymous">
 </head>
 
 <body>
@@ -38,7 +39,8 @@
                                 ({{ selectedStation.city}}) - {{ selectedStation.station }}
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="#" v-for="station in stations" v-on:click="selectStation(station)">({{ station.city }}) -
+                                <a class="dropdown-item" href="#" v-for="station in stations" v-on:click="selectStation(station)">({{
+                                    station.city }}) -
                                     {{station.station}}</a>
                             </div>
                         </li>
@@ -71,7 +73,8 @@
                         <div>
                             <div style="font-size: 2em">
                                 libres:
-                                <span class="bigNumber">{{ seatsBusy }}</span> / <span class="bigNumber">{{ seatsTotal }}</span>
+                                <span class="bigNumber">{{ seatsBusy }}</span> / <span class="bigNumber">{{ seatsTotal
+                                    }}</span>
                             </div>
                             <div style="height: 20px; width: 100%; background-color: #a44bb4">
                                 <div class="gauge" v-bind:style="{backgroundColor: '#FFF', height: '100%', width: (seatsBusy / (seatsTotal) * 100) + '%', transition: 'width 2sec'}"></div>
@@ -85,16 +88,17 @@
                 <!-- siège-->
                 <div v-for="seat in seatStatus" :key="seat.value.seat">
                     <h3>n°{{ seat.value.seat + 1 }}</h3>
-                    <img v-if="seat.value.status !== 1" src="assets/armchair-simple-dark.svg" width="50%" style="display: block; margin: 0 auto"/>                    
-                    <img v-if="seat.value.status === 1" src="assets/armchair-simple-dark-busy.svg" width="50%" style="display: block; margin: 0 auto"/>                    
-
-                    <div>
-                        <button v-on:click="bookSeat(seat)" class="btn">Réserver</button>
-                        <button v-on:click="unbookSeat(seat)" class="btn">Libérer</button>
+                    <img v-if="seat.value.status !== 1" src="assets/armchair-simple-dark.svg" width="50%" style="display: block; margin: 0 auto" />
+                    <img v-if="seat.value.status === 1" src="assets/armchair-simple-dark-busy.svg" width="50%" style="display: block; margin: 0 auto" />
+                    <div v-if="seat.value.reserv == 1">
+                        <strong>Réservé</strong> |
+                        <button v-on:click="unbookSeat(seat.value.seat)" class="btn">Libérer</button>
+                    </div>
+                    <div v-if="seat.value.reserv !== 1">
+                        <button v-on:click="bookSeat(seat.value.seat)" class="btn">Réserver</button>
                     </div>
                 </div>
-
-            </div>
+            </div>  
 
 
             <h2>Statistiques</h2>

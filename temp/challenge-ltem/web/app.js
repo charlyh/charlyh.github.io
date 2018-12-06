@@ -2,17 +2,17 @@ const API_KEY = 'b6a3d30adb07411fb3d3bc0865b3257e';
 
 function guid() {
     function s4() {
-      return Math.floor((1 + Math.random()) * 0x10000)
-        .toString(16)
-        .substring(1);
+        return Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16)
+            .substring(1);
     }
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
-  }
+}
 
 let app;
 
 try {
-    const client = new Paho.MQTT.Client("liveobjects.orange-business.com", 443, "/mqtt", "web-ui-" + guid()  );
+    const client = new Paho.MQTT.Client("liveobjects.orange-business.com", 443, "/mqtt", "web-ui-" + guid());
     client.onConnectionLost = onConnectionLost;
     client.onMessageArrived = onMessageArrived;
     console.log("connecting to live objects...");
@@ -45,16 +45,7 @@ const randomBool = () => (Math.random() > 0.5);
 const STATIONS = [
     {
         id: 'partdieu', city: 'Lyon', station: 'gare de la Part-Dieu',
-        seats: [
-            { id: 1, deviceId: 'urn:lo:nsid:starterkit:352653090111519' },
-            { id: 2, deviceId: 'urn:lo:nsid:starterkit:352653090111519' },
-            { id: 3, deviceId: 'urn:lo:nsid:starterkit:352653090111519' },
-            { id: 4, deviceId: 'urn:lo:nsid:starterkit:352653090111519' },
-            { id: 5, deviceId: 'urn:lo:nsid:starterkit:352653090111519' },
-            { id: 6, deviceId: 'urn:lo:nsid:starterkit:352653090111519' },
-            { id: 7, deviceId: 'urn:lo:nsid:starterkit:352653090111519' },
-            { id: 8, deviceId: 'urn:lo:nsid:starterkit:352653090111519' },
-        ]
+        deviceId: 'urn:lo:nsid:starterkit:352653090111519'
     },
     { id: 'lyon-prc', city: 'Lyon', station: 'gare de Perrache' },
     { id: 'paris-lyon', city: 'Paris', station: 'gare de Lyon' },
@@ -101,7 +92,7 @@ init = () => {
                     this.updateCounts();
                 })
             },
-            incr: function() {
+            incr: function () {
                 this.seatsBusy = this.seatsBusy + 1;
             },
             updateCounts: function () {
@@ -110,7 +101,7 @@ init = () => {
                 this.now = moment();
             },
             handleSeatUpdate: function (msg) {
-                const expectedStreamId =  'seat:' + this.selectedStation.id;
+                const expectedStreamId = 'seat:' + this.selectedStation.id;
                 if (msg.streamId === expectedStreamId) {
                     console.log("received update for currently selected station => udpating", msg.value);
                     this.seatStatus[msg.value.seat] = msg;
@@ -119,13 +110,13 @@ init = () => {
                 }
                 this.updateCounts();
             },
-            bookSeat: function (seat) {
-                console.log(`booking seat ${seat}`);
-                loClient.sendMqttCommand(seat.deviceId, 'res', { t: seat.id, v: 1 });
+            bookSeat: function (seatId) {
+                console.log(`booking seat ${seatId}`);
+                loClient.sendMqttCommand(this.selectedStation.deviceId, 'res', { t: seatId, v: 1 });
             },
-            unbookSeat: function (seat) {
-                console.log(`unbooking seat ${seat}`);
-                loClient.sendMqttCommand(seat.deviceId, 'res', { t: seat.id, v: 0 });
+            unbookSeat: function (seatId) {
+                console.log(`unbooking seat ${seatId}`);
+                loClient.sendMqttCommand(this.selectedStation.deviceId, 'res', { t: seatId, v: 0 });
             }
 
         },
@@ -134,15 +125,15 @@ init = () => {
         }
     });
 
-    const calendarFormat =  {sameDay: '[aujourd\'hui]', lastDay: '[hier]', lastWeek: 'dddd'};
+    const calendarFormat = { sameDay: '[aujourd\'hui]', lastDay: '[hier]', lastWeek: 'dddd' };
 
     // d3js chart
     var chart = (() => {
         // building list à past 7 days
         const DATA = new Array(7).fill(0)
-            .map((d,i) => moment().startOf('day').subtract(i, 'day'))
+            .map((d, i) => moment().startOf('day').subtract(i, 'day'))
             .reverse()
-            .map((d) => ({ date: d.valueOf(), dateStr: d.calendar(null, calendarFormat), val: Math.floor(Math.random() * 100)}))
+            .map((d) => ({ date: d.valueOf(), dateStr: d.calendar(null, calendarFormat), val: Math.floor(Math.random() * 100) }))
         console.log("D", DATA);
 
         const WIDTH = 1100;
@@ -153,36 +144,36 @@ init = () => {
         const xscale = d3.scaleLinear().domain([0, DATA.length]).range([LEFT_PADDING, WIDTH]);
         const heightScale = d3.scaleLinear().domain([0, 100]).range([0, HEIGHT - TEXT_HEIGHT]);
         const yScale = d3.scaleLinear().domain([0, 100]).range([HEIGHT - TEXT_HEIGHT, 0]);
-        
+
         const gXLabels = svg.append("g");
         const gYLabels = svg.append("g");
         const gRects = svg.append("g");
-        
+
         return {
-            update: function() {
+            update: function () {
                 // rects
                 var d = gRects.selectAll("rect").data(DATA);
                 d.enter().append("rect")
                     .attr("fill", "#6e267b")
-                        .attr("width", xscale(0.5) - xscale(0))
-                        .attr("y", (d) => yScale(d.val))
-                        .attr("x", (d,i) => xscale(i))
-                        .attr("height", (d) => heightScale(d.val));
+                    .attr("width", xscale(0.5) - xscale(0))
+                    .attr("y", (d) => yScale(d.val))
+                    .attr("x", (d, i) => xscale(i))
+                    .attr("height", (d) => heightScale(d.val));
                 d.exit().remove();
 
                 // texts
                 d = gXLabels.selectAll("text").data(DATA);
                 d.enter().append("text")
                     .text((d) => d.dateStr)
-                        .attr("x", (d,i) => xscale(i))
-                        .attr("y", HEIGHT);
+                    .attr("x", (d, i) => xscale(i))
+                    .attr("y", HEIGHT);
                 d.exit().remove();
 
                 // Y axis
                 d = gYLabels.selectAll("text").data(yScale.ticks(5));
                 d.enter().append("text")
                     .text((d) => '' + d)
-                        .attr("y", yScale);
+                    .attr("y", yScale);
                 d.exit().remove();
                 // Y axis
                 d = gYLabels.selectAll("line").data(yScale.ticks(5));
