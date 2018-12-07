@@ -68,7 +68,7 @@ init = () => {
         outlet: randomSeatsCategory()
     });
     const data = {
-        seatStatus: {},
+        seatStates: {},
         stations: STATION_MAP,
         seatsTotal: 0,
         seatsBusy: 0,
@@ -85,10 +85,9 @@ init = () => {
             },
             udpate: function () {
                 this.rawStatsData = [];
-                this.seats = randomSeats();
-                loClient.getStationState(this.selectedStation.id).then((res) => {
-                    console.log("seatStatus", res);
-                    this.seatStatus = res;
+                loClient.getAllStates(this.selectedStation.id).then((res) => {
+                    console.log("seatStates", res);
+                    this.seatStates = res;
                     this.updateCounts();
                 })
             },
@@ -96,15 +95,24 @@ init = () => {
                 this.seatsBusy = this.seatsBusy + 1;
             },
             updateCounts: function () {
-                this.seatsTotal = Object.values(this.seatStatus).length;
-                this.seatsBusy = Object.values(this.seatStatus).filter((s) => s.value.status !== 1).length;
+                this.seatsTotal = Object.values(this.seatStates).length;
+                this.seatsBusy = Object.values(this.seatStates).filter((s) => s.busy).length;
                 this.now = moment();
             },
             handleSeatUpdate: function (msg) {
                 const expectedStreamId = 'seat:' + this.selectedStation.id;
                 if (msg.streamId === expectedStreamId) {
                     console.log("received update for currently selected station => udpating", msg.value);
-                    this.seatStatus[msg.value.seat] = msg;
+                    const seatId = msg.value.seat;
+                    var state = this.seatStates[seatId] || {id: seatId};
+                    if(typeof msg.value.status !== 'undefined') {
+                        state.busy = (msg.value.status === 1);
+                    }
+                    if(typeof msg.value.reserv !== 'undefined') {
+                        state.reserv = (msg.value.reserv === 1);
+                    }
+                    console.log(`seat ${seatId} has new state (busy=${state.busy} reserv=${state.reserv})`, state)
+                    this.seatStates[seatId] = state;
                 } else {
                     console.log("received update for another station => dropping", msg.value);
                 }

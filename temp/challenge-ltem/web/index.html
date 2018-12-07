@@ -88,24 +88,24 @@
             <h3>Détails</h3>
             <div style="display: grid; grid-template-columns: repeat(5, auto); margin-bottom: 1em; text-align: center">
                 <!-- siège-->
-                <div v-for="seat in seatStatus" :key="seat.value.seat">
-                    <h3>n°{{ seat.value.seat + 1 }}</h3>
-                    <img v-if="seat.value.status !== 1 && seat.value.reserv !== 1" src="assets/armchair-simple-dark.svg"
+                <div v-for="(state, seatId) in seatStates" :key="seatId">
+                    <h3>n°{{ parseFloat(seatId) + 1 }}</h3>
+                    <img v-if="!state.busy && !state.reserv" src="assets/armchair-simple-dark.svg"
                         width="50%" style="display: block; margin: 0 auto" />
-                    <img v-if="seat.value.status !== 1 && seat.value.reserv === 1" src="assets/armchair-simple-dark-reserv.svg"
+                    <img v-if="!state.busy && state.reserv" src="assets/armchair-simple-dark-reserv.svg"
                         width="50%" style="display: block; margin: 0 auto" />
-                    <img v-if="seat.value.status === 1 && seat.value.reserv !== 1" src="assets/armchair-simple-dark-busy.svg"
+                    <img v-if="state.busy && !state.reserv" src="assets/armchair-simple-dark-busy.svg"
                         width="50%" style="display: block; margin: 0 auto" class="brighter" />
-                    <img v-if="seat.value.status === 1 && seat.value.reserv === 1" src="assets/armchair-simple-dark-busy-reserv.svg"
+                    <img v-if="state.busy && state.reserv" src="assets/armchair-simple-dark-busy-reserv.svg"
                         width="50%" style="display: block; margin: 0 auto" class="brighter" />
-                    <div v-if="seat.value.reserv == 1">
-                        <button v-on:click="unbookSeat(seat.value.seat)" class="btn btn-outline-danger">
+                    <div v-if="state.reserv == 1">
+                        <button v-on:click="unbookSeat(seatId)" class="btn btn-outline-danger">
                             <span class="fa fa-fw fa-times"></span>
                             Libérer
                         </button>
                     </div>
-                    <div v-if="seat.value.reserv !== 1">
-                        <button v-on:click="bookSeat(seat.value.seat)" class="btn btn-success">
+                    <div v-if="!state.reserv">
+                        <button v-on:click="bookSeat(seatId)" class="btn btn-success">
                             <span class="fa fa-fw fa-star"></span>
                             Réserver
                         </button>
