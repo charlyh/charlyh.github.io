@@ -88,23 +88,18 @@
                 <!-- siège-->
                 <div v-for="seat in seatStatus" :key="seat.value.seat">
                     <h3>n°{{ seat.value.seat + 1 }}</h3>
-                    <img v-if="seat.value.status !== 1" src="assets/armchair-simple-dark.svg" width="50%" style="display: block; margin: 0 auto" />
-                    <img v-if="seat.value.status === 1" src="assets/armchair-simple-dark-busy.svg" width="50%" style="display: block; margin: 0 auto" />
+                    <img v-if="seat.value.status !== 1 && seat.value.reserv !== 1" src="assets/armchair-simple-dark.svg" width="50%" style="display: block; margin: 0 auto" />
+                    <img v-if="seat.value.status !== 1 && seat.value.reserv === 1" src="assets/armchair-simple-dark-reserv.svg" width="50%" style="display: block; margin: 0 auto" />
+                    <img v-if="seat.value.status === 1 && seat.value.reserv !== 1" src="assets/armchair-simple-dark-busy.svg" width="50%" style="display: block; margin: 0 auto" class="brighter" />
+                    <img v-if="seat.value.status === 1 && seat.value.reserv === 1" src="assets/armchair-simple-dark-busy-reserv.svg" width="50%" style="display: block; margin: 0 auto" class="brighter" />
                     <div v-if="seat.value.reserv == 1">
-                        <strong>Réservé</strong> |
-                        <button v-on:click="unbookSeat(seat.value.seat)" class="btn">Libérer</button>
+                        <button v-on:click="unbookSeat(seat.value.seat)" class="btn btn-info">Libérer</button>
                     </div>
                     <div v-if="seat.value.reserv !== 1">
-                        <button v-on:click="bookSeat(seat.value.seat)" class="btn">Réserver</button>
+                        <button v-on:click="bookSeat(seat.value.seat)" class="btn btn-success">Réserver</button>
                     </div>
                 </div>
             </div>  
-
-
-            <h2>Statistiques</h2>
-            <h3>7 derniers jours - taux d'occupation</h3>
-
-            <div id="chart_days"></div>
 
             <footer class="text-center" style="margin-top: 2em">
                 <a>mentions légales</a> | <a>conditions générales</a><br>
@@ -123,7 +118,7 @@
         <script src="assets/moment.fr.js"></script>
         <script src="assets/d3.min.js"></script>
         <script src="lo-client.js"></script>
-        <script src="app.js"></script>
+        <script src="index.js"></script>
 </body>
 
 </html>

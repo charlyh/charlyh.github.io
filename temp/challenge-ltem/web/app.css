@@ -36,3 +36,7 @@ h1, h2, h3 {
 .c2 { color: rgb(138, 138, 143); }
 .ff1 { font-family: avenir_medium, Arial, Helvetica, sans-serif }
 .bigNumber { font-size: 2em }
+.brighter {
+    -webkit-filter: opacity(20%);
+    filter: opacity(200%);
+}
