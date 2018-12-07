@@ -71,7 +71,7 @@ init = () => {
         seatStates: {},
         stations: STATION_MAP,
         seatsTotal: 0,
-        seatsBusy: 0,
+        seatsFree: 0,
         seats: randomSeats(),
         now: moment()
     };
@@ -91,12 +91,9 @@ init = () => {
                     this.updateCounts();
                 })
             },
-            incr: function () {
-                this.seatsBusy = this.seatsBusy + 1;
-            },
             updateCounts: function () {
                 this.seatsTotal = Object.values(this.seatStates).length;
-                this.seatsBusy = Object.values(this.seatStates).filter((s) => s.busy).length;
+                this.seatsFree = Object.values(this.seatStates).filter((s) => !s.busy).length;
                 this.now = moment();
             },
             handleSeatUpdate: function (msg) {

@@ -75,11 +75,10 @@
                         <div>
                             <div style="font-size: 2em">
                                 libres:
-                                <span class="bigNumber">{{ seatsBusy }}</span> / <span class="bigNumber">{{ seatsTotal
-                                    }}</span>
+                                <span class="bigNumber">{{ seatsFree }}</span> / <span class="bigNumber">{{ seatsTotal }}</span>
                             </div>
                             <div style="height: 20px; width: 100%; background-color: #a44bb4">
-                                <div class="gauge" v-bind:style="{backgroundColor: '#FFF', height: '100%', width: (seatsBusy / (seatsTotal) * 100) + '%', transition: 'width 2sec'}"></div>
+                                <div class="gauge" v-bind:style="{backgroundColor: '#FFF', height: '100%', width: (seatsFree / (seatsTotal) * 100) + '%', transition: 'width 2sec'}"></div>
                             </div>
                         </div>
                     </div>
