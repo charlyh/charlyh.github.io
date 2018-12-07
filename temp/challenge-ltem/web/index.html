@@ -7,16 +7,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="assets/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
-        crossorigin="anonymous">
+    <link rel="stylesheet" href="assets/bootstrap.min.css">
 
     <title>SNCF - demo LTE-M</title>
     <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon" />
 
     <link rel="stylesheet" href="app.css" />
-
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU"
-        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
 </head>
 
 <body>
@@ -46,7 +43,10 @@
                         </li>
                     </ul>
                     <form class="form-inline my-2 my-lg-0">
-                        <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Déconnexion</button>
+                        <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit">
+                            <span class="fa fa-times fa-fw"></span>
+                            Déconnexion
+                        </button>
                     </form>
                 </div>
             </div>
@@ -59,7 +59,9 @@
 
             <p class="c2">
                 {{ now.format('LLLL') }} |
-                <button class="btn" v-on:click="udpate()">actualiser</button>
+                <button class="btn btn-link" v-on:click="udpate()">
+                    <span class="fa fa-refresh fa-sync"></span> actualiser
+                </button>
             </p>
 
             <h2>Places</h2>
@@ -88,18 +90,28 @@
                 <!-- siège-->
                 <div v-for="seat in seatStatus" :key="seat.value.seat">
                     <h3>n°{{ seat.value.seat + 1 }}</h3>
-                    <img v-if="seat.value.status !== 1 && seat.value.reserv !== 1" src="assets/armchair-simple-dark.svg" width="50%" style="display: block; margin: 0 auto" />
-                    <img v-if="seat.value.status !== 1 && seat.value.reserv === 1" src="assets/armchair-simple-dark-reserv.svg" width="50%" style="display: block; margin: 0 auto" />
-                    <img v-if="seat.value.status === 1 && seat.value.reserv !== 1" src="assets/armchair-simple-dark-busy.svg" width="50%" style="display: block; margin: 0 auto" class="brighter" />
-                    <img v-if="seat.value.status === 1 && seat.value.reserv === 1" src="assets/armchair-simple-dark-busy-reserv.svg" width="50%" style="display: block; margin: 0 auto" class="brighter" />
+                    <img v-if="seat.value.status !== 1 && seat.value.reserv !== 1" src="assets/armchair-simple-dark.svg"
+                        width="50%" style="display: block; margin: 0 auto" />
+                    <img v-if="seat.value.status !== 1 && seat.value.reserv === 1" src="assets/armchair-simple-dark-reserv.svg"
+                        width="50%" style="display: block; margin: 0 auto" />
+                    <img v-if="seat.value.status === 1 && seat.value.reserv !== 1" src="assets/armchair-simple-dark-busy.svg"
+                        width="50%" style="display: block; margin: 0 auto" class="brighter" />
+                    <img v-if="seat.value.status === 1 && seat.value.reserv === 1" src="assets/armchair-simple-dark-busy-reserv.svg"
+                        width="50%" style="display: block; margin: 0 auto" class="brighter" />
                     <div v-if="seat.value.reserv == 1">
-                        <button v-on:click="unbookSeat(seat.value.seat)" class="btn btn-info">Libérer</button>
+                        <button v-on:click="unbookSeat(seat.value.seat)" class="btn btn-outline-danger">
+                            <span class="fa fa-fw fa-times"></span>
+                            Libérer
+                        </button>
                     </div>
                     <div v-if="seat.value.reserv !== 1">
-                        <button v-on:click="bookSeat(seat.value.seat)" class="btn btn-success">Réserver</button>
+                        <button v-on:click="bookSeat(seat.value.seat)" class="btn btn-success">
+                            <span class="fa fa-fw fa-star"></span>
+                            Réserver
+                        </button>
                     </div>
                 </div>
-            </div>  
+            </div>
 
             <footer class="text-center" style="margin-top: 2em">
                 <a>mentions légales</a> | <a>conditions générales</a><br>
